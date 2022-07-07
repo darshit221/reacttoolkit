@@ -28,8 +28,9 @@ function UpdatePassenger() {
   const { id } = useParams();
   const navigate = useNavigate();
 
-  const selectedPassanger = useSelector(getSelectedPassager());
-  const { airlines } = useSelector(getArlines());
+  const selectedPassanger = useSelector(getSelectedPassager);
+  const airlines = useSelector(getArlines);
+  console.log("airlines: ", airlines);
   console.log("selectedPassanger: ", selectedPassanger);
 
   useEffect(() => {
@@ -59,14 +60,10 @@ function UpdatePassenger() {
     e.preventDefault();
     console.log(id);
     dispatch(
-      updatePassanger(
-        {
-          name: "John Doe",
-          trips: 500,
-          airline: 8,
-        },
-        id
-      )
+      updatePassanger({
+        id,
+        data: updateData,
+      })
     );
     // navigate("/");
   };

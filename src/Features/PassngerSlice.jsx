@@ -10,16 +10,16 @@ export const fetchPassanger = createAsyncThunk(
     return passanger;
   }
 );
-export const fetchArlines = createAsyncThunk("airlines", () => {
-  const airlines = getData("airlines");
-  return airlines;
+export const fetchArlines = createAsyncThunk("airlines", async () => {
+  const response = await getData("airlines");
+  return response.data;
 });
 
 export const fetchSelectedPassanger = createAsyncThunk(
   "passanger/fetchSelectedPassanger",
-  (id) => {
-    const selectedpassanger = getData(`passenger/${id}`);
-    return selectedpassanger;
+  async (id) => {
+    const response = await getData(`passenger/${id}`);
+    return response.data;
   }
 );
 
@@ -35,18 +35,23 @@ export const addPassanger = createAsyncThunk(
 
 export const updatePassanger = createAsyncThunk(
   "passanger/updatePassenger",
-  (data, id) => {
-    console.log("id,data", id, data);
-    const response = updateData(`passenger/${id}`, data);
-    return response;
+  async (user, { dispatch }) => {
+    const { id, data } = user;
+
+    const response = await updateData(`passenger/${id}`, data);
+    dispatch(fetchPassanger());
+    return response.data;
   }
 );
 
 export const deletePassanger = createAsyncThunk(
   "passanger/deletePassanger",
-  async (id, { dispatch }) => {
+  async (id, { dispatch, getState }) => {
     const response = await deleteData(`passenger/${id}`);
-    dispatch(fetchPassanger());
+    if (response.status == 200) {
+      dispatch(fetchPassanger());
+    }
+
     return response.data;
   }
 );
@@ -59,7 +64,7 @@ const initialState = {
 
 const passangerSlice = createSlice({
   name: "passanger",
-  initialState: initialState,
+  initialState,
   reducers: {},
   extraReducers: {
     [fetchPassanger.fulfilled]: (state, { payload }) => {
@@ -87,6 +92,7 @@ const passangerSlice = createSlice({
   },
 });
 
+export const getAllPassnger = (state) => state.passangerSlice.passangers;
 export const getSelectedPassager = (state) =>
   state.passangerSlice.selectedPassanger;
 export const getArlines = (state) => state.passangerSlice.airlines;

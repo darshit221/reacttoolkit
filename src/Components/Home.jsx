@@ -21,6 +21,8 @@ import {
   deletePassanger,
   fetchArlines,
   fetchPassanger,
+  getAllPassnger,
+  getPassnger,
 } from "../Features/PassngerSlice";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -44,14 +46,9 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 function Home() {
-  const { passangers } = useSelector((state) => state.passangerSlice);
+  const passangers = useSelector(getAllPassnger);
+  console.log("passangers: ", passangers);
   const dispatch = useDispatch();
-  console.log("passnger: ", passangers);
-
-  useEffect(() => {
-    dispatch(fetchPassanger());
-    dispatch(fetchArlines());
-  }, []);
 
   const deleteHandler = (id) => {
     dispatch(deletePassanger(id));
